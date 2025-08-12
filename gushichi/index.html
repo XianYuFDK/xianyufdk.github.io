@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古诗词搜索</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/fixes.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="container">
+        <header class="my-5 text-center">
+            <h1 class="poetry-title">古诗词搜索</h1>
+            <p class="lead">探索中国古典诗词之美</p>
+        </header>
+
+        <div class="search-container my-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="input-group mb-3">
+                        <input type="text" id="search-input" class="form-control form-control-lg" placeholder="输入关键词、作者、诗句..." aria-label="搜索诗词">
+                        <button class="btn btn-primary" type="button" id="search-button">搜索</button>
+                    </div>
+                    <div class="search-options mb-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="search-title" checked>
+                            <label class="form-check-label" for="search-title">标题</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="search-author" checked>
+                            <label class="form-check-label" for="search-author">作者</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="search-content" checked>
+                            <label class="form-check-label" for="search-content">内容</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="search-tags">
+                            <label class="form-check-label" for="search-tags">标签</label>
+                        </div>
+                    </div>
+                    <div class="category-select mb-3">
+                        <select class="form-select" id="poetry-category">
+                            <option value="all" selected>所有类别</option>
+                            <option value="shi">诗经</option>
+                            <option value="tang">唐诗</option>
+                            <option value="song">宋词</option>
+                            <option value="yuan">元曲</option>
+                            <option value="caocao">曹操诗集</option>
+                            <option value="lunyu">论语</option>
+                        </select>
+                    </div>
+                    
+                    <div class="api-select mb-3 text-end">
+                        <button class="btn btn-sm btn-outline-secondary" type="button" id="api-settings-btn" data-bs-toggle="modal" data-bs-target="#apiSettingsModal">
+                            <i class="bi bi-gear"></i> API 设置
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-container my-4">
+            <div id="search-status" class="text-center mb-3 d-none">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">加载中...</span>
+                </div>
+                <p class="mt-2">正在搜索...</p>
+            </div>
+            <div id="results-count" class="mb-3 text-center d-none">
+                共找到 <span id="count-number">0</span> 条结果
+            </div>
+            <div id="results-list" class="row">
+                <!-- 搜索结果将在这里动态显示 -->
+            </div>
+            <div id="no-results" class="alert alert-info text-center d-none">
+                未找到符合条件的诗词，请尝试其他关键词或筛选条件
+            </div>
+            <div class="text-center mt-4 d-none" id="load-more-container">
+                <button class="btn btn-outline-primary" id="load-more-button">加载更多</button>
+            </div>
+        </div>
+
+        <div class="card mb-4 d-none" id="poetry-detail">
+            <div class="card-body">
+                <h2 class="card-title" id="detail-title"></h2>
+                <h6 class="card-subtitle mb-3 text-muted">
+                    <span id="detail-dynasty"></span> · <span id="detail-author"></span>
+                </h6>
+                <div class="card-text poetry-content" id="detail-content"></div>
+                <div class="mt-3" id="detail-notes"></div>
+                <div class="mt-3" id="detail-translation"></div>
+                <div class="mt-3" id="detail-appreciation"></div>
+                <button class="btn btn-secondary mt-3" id="back-to-results">返回搜索结果</button>
+            </div>
+        </div>
+
+        <div class="random-poetry card mb-4">
+            <div class="card-body text-center">
+                <h5 class="card-title">每日一诗</h5>
+                <h3 id="random-title" class="my-3"></h3>
+                <h6 id="random-author" class="text-muted mb-3"></h6>
+                <div id="random-content" class="poetry-content"></div>
+                <button class="btn btn-outline-secondary mt-3" id="random-button">换一首</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="container mt-5 mb-3 text-center">
+        <hr>
+        <p>数据来源：<a href="https://github.com/chinese-poetry/chinese-poetry" target="_blank">chinese-poetry</a> 项目</p>
+        <p>&copy; 2025 古诗词搜索 | <a href="https://github.com/your-username/poetry-search" target="_blank">GitHub 项目地址</a></p>
+    </footer>
+    
+    <!-- API 设置模态框 -->
+    <div class="modal fade" id="apiSettingsModal" tabindex="-1" aria-labelledby="apiSettingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="apiSettingsModalLabel">API 设置</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="search-api-select" class="form-label">搜索 API</label>
+                        <select class="form-select" id="search-api-select">
+                            <option value="github">Chinese-Poetry GitHub 数据</option>
+                            <option value="gushiwen">古诗文网 API</option>
+                        </select>
+                        <div class="form-text">选择用于搜索诗词的数据源</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="random-api-select" class="form-label">随机诗词 API</label>
+                        <select class="form-select" id="random-api-select">
+                            <option value="jinrishici">今日诗词 API</option>
+                            <option value="gushicione">古诗词·一言 API</option>
+                            <option value="gushiwen">古诗文网 API</option>
+                            <option value="github">Chinese-Poetry GitHub 数据</option>
+                        </select>
+                        <div class="form-text">选择用于随机诗词展示的数据源</div>
+                    </div>
+                    
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="auto-failover-switch" checked>
+                        <label class="form-check-label" for="auto-failover-switch">API 自动故障转移</label>
+                        <div class="form-text">当所选 API 失败时，自动尝试其他 API</div>
+                    </div>
+                    
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="local-cache-switch" checked>
+                        <label class="form-check-label" for="local-cache-switch">启用本地缓存</label>
+                        <div class="form-text">将已加载的数据缓存到本地以提高加载速度</div>
+                    </div>
+                    
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="local-data-switch" checked>
+                        <label class="form-check-label" for="local-data-switch">优先使用本地数据</label>
+                        <div class="form-text">优先从本地 /data 目录加载数据，避免网络请求</div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6>数据源说明</h6>
+                        <ul class="mb-0">
+                            <li><strong>本地数据</strong>：直接从网站目录加载数据，速度最快，适合离线使用</li>
+                            <li><strong>Chinese-Poetry GitHub 数据</strong>：最全面的古诗词数据库，包含诗经、唐诗、宋词等</li>
+                            <li><strong>今日诗词 API</strong>：提供优质的诗词推荐服务</li>
+                            <li><strong>古诗词·一言 API</strong>：简洁的古诗词随机获取接口</li>
+                            <li><strong>古诗文网 API</strong>：提供丰富的古诗文内容和搜索功能</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="save-api-settings">保存设置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/fix.js"></script>
+    <script src="js/dataLoader.js"></script>
+    <script src="js/jinrishiciAPI.js"></script>
+    <script src="js/gushiciOneAPI.js"></script>
+    <script src="js/gushiwenAPI.js"></script>
+    <script src="js/search.js"></script>
+    <script>
+        // 在应用启动前运行自动修复
+        const poetryFix = new PoetryFix(CONFIG);
+        poetryFix.runAll().then(result => {
+            if (result.success && result.changes.length > 0) {
+                console.log('自动修复完成，已应用以下更改:', result.changes);
+            }
+            // 加载主应用脚本
+            const script = document.createElement('script');
+            script.src = 'js/app.js';
+            document.body.appendChild(script);
+        }).catch(error => {
+            console.error('自动修复失败:', error);
+            // 加载主应用脚本
+            const script = document.createElement('script');
+            script.src = 'js/app.js';
+            document.body.appendChild(script);
+        });
+    </script>
+</body>
+</html>
