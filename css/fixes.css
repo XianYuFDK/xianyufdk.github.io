@@ -1,0 +1,53 @@
+/* 错误状态样式 */
+.load-failed {
+    border: 1px solid #f8d7da;
+    background-color: #fff8f8;
+}
+
+.load-failed .card-body {
+    color: #721c24;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 提示按钮动画 */
+.btn-warning {
+    animation: pulse 2s infinite;
+}
+
+/* 诗词内容格式化 */
+.poetry-content {
+    white-space: pre-wrap;
+    line-height: 1.8;
+    text-align: center;
+}
+
+/* 错误提示增强 */
+.alert-danger .btn {
+    margin-top: 10px;
+}
+
+/* 增强移动端显示 */
+@media (max-width: 576px) {
+    .search-options {
+        flex-wrap: wrap;
+    }
+    
+    .search-options .form-check {
+        margin-bottom: 8px;
+    }
+    
+    .poetry-content {
+        font-size: 14px;
+    }
+}
