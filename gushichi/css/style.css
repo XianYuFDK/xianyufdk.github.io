@@ -1,0 +1,89 @@
+/* 全局样式 */
+body {
+    font-family: 'Noto Serif SC', serif, 'Microsoft YaHei', '微软雅黑';
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* 标题样式 */
+.poetry-title {
+    font-weight: bold;
+    color: #212529;
+}
+
+/* 诗词内容样式 */
+.poetry-content {
+    white-space: pre-line;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    text-align: center;
+}
+
+/* 诗词卡片样式 */
+.poetry-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    height: 100%;
+}
+
+.poetry-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.poetry-card .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.poetry-card .card-text {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+/* 搜索结果样式 */
+#results-list {
+    margin-top: 20px;
+}
+
+/* 加载更多按钮样式 */
+#load-more-button {
+    padding: 8px 30px;
+}
+
+/* 随机诗词卡片 */
+.random-poetry {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-top: 40px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .poetry-content {
+        font-size: 1rem;
+    }
+    
+    .search-options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* 古风样式元素 */
+.poetry-card, .random-poetry, #poetry-detail {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 引入谷歌字体 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
